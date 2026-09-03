@@ -1,0 +1,27 @@
+services:
+  db-mcp:
+    build: .
+    container_name: db-mcp
+    restart: unless-stopped
+    ports:
+      - "${MCP_PORT:-8765}:8765"
+    environment:
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8765
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-postgres}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      MAX_ROWS: ${MAX_ROWS:-500}
+      MCP_TOKEN_READ: ${MCP_TOKEN_READ:-}
+      MCP_TOKEN_WRITE: ${MCP_TOKEN_WRITE:-}
+      MCP_TOKEN_ADMIN: ${MCP_TOKEN_ADMIN:-}
+      MCP_AUTH_EXEMPT_PATHS: ${MCP_AUTH_EXEMPT_PATHS:-/healthz}
+    networks:
+      - db-net
+
+networks:
+  db-net:
+    external: true
+    name: ${DB_NET_NAME:-db-net}
